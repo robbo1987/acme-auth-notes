@@ -33,11 +33,14 @@ User.addHook('beforeSave', async(user)=> {
 User.byToken = async(token)=> {
   try {
     const payload = await jwt.verify(token, process.env.JWT);
+   
     const user = await User.findByPk(payload.id, {
       attributes: {
         exclude: ['password']
       }
     });
+    console.log('payload',payload)
+    console.log('user',user)
     if(user){
       return user;
       

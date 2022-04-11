@@ -28,13 +28,16 @@ app.get("/api/auth", async (req, res, next) => {
 
 app.get("/api/notes", async (req, res, next) => {
   try {
-    //we want to find the user by the users token
-    //we then want to match the client side token to server side user.id
-    const notes = await Note.findAll();
-    res.send(notes);
+    const user= await User.byToken(req.headers.authorization)
+    res.send(await Note.findAll({
+      where: {
+        userId:user.id
+      }
+    }))
   } catch (ex) {
     next(ex);
   }
+  
 });
 
 app.use((err, req, res, next) => {
