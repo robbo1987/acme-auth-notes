@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
-const { useSyncExternalStore } = require('react');
 const { STRING } = Sequelize;
 const config = {
   logging: false
@@ -39,8 +38,6 @@ User.byToken = async(token)=> {
         exclude: ['password']
       }
     });
-    console.log('payload',payload)
-    console.log('user',user)
     if(user){
       return user;
       

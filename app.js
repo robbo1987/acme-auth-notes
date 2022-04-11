@@ -5,6 +5,7 @@ const {
   models: { User, Note },
 } = require("./db");
 const path = require("path");
+const { Console } = require("console");
 
 app.use("/dist", express.static(path.join(__dirname, "dist")));
 
