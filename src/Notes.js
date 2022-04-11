@@ -2,19 +2,20 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-const Notes = ({ notes }) => {
-  console.log("notes", notes);
+const Notes = ({ notes,auth }) => {
+  const userNotes = notes.filter(note => note.userId === auth.id)
+  console.log(userNotes)
   return (
     <div>
       <Link to="/home">Home</Link>
       <div>TODO - Ability of User to manage notes</div>
       <div>
-        Here is a list of all notes, not user specific:
+        Here is a list of all user specific notes:
         <ul>
-          {notes.map((note) => {
+          {userNotes.map((note) => {
             return (
-              <li>
-                note id: {note.id} note: {note.txt}
+              <li key={note.id}>
+                note id: {note.id} note.userId: {note.userId} note: {note.text}
               </li>
             );
           })}

@@ -30,7 +30,6 @@ const signIn = (credentials)=> {
   return async(dispatch)=> {
     let response = await axios.post('/api/auth', credentials);
     const { token } = response.data;
-    console.log(token)
     window.localStorage.setItem('token', token);
     return dispatch(attemptLogin());
   }
@@ -59,7 +58,9 @@ const store = createStore(
 
 export const fetchNotes = () => {
   return async(dispatch) => {
+    
     const notes = (await axios.get('/api/notes')).data;
+    console.log(notes)
     dispatch({type: LOAD_NOTES, notes})
   }
 }

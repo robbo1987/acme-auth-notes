@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
+const { useSyncExternalStore } = require('react');
 const { STRING } = Sequelize;
 const config = {
   logging: false
@@ -17,7 +18,7 @@ const User = conn.define('user', {
 });
 
 const Note = conn.define('note', {
-  txt: Sequelize.DataTypes.TEXT
+  text: Sequelize.DataTypes.TEXT
 })
 
 Note.belongsTo(User)
@@ -39,6 +40,7 @@ User.byToken = async(token)=> {
     });
     if(user){
       return user;
+      
     }
     const error = Error('bad credentials');
     error.status = 401;
@@ -75,23 +77,35 @@ const syncAndSeed = async()=> {
   const [lucy, moe, larry] = await Promise.all(
     credentials.map( credential => User.create(credential))
   );
-  const txt = [
-    {txt: "today I need to do the laundry at 8 A.M."},
-    {txt: "today I need to get my neighbors mail because hes on vaca"},
-    {txt: "today I need to to make dinner reservations for my sisters birthday"},
+  const notes = [
+    {text: "today I need to do the laundry at 8 A.M."},
+    {text: "today I need to get my neighbors mail because hes on vaca"},
+    {text: "today I need to to make dinner reservations for my sisters birthday"},
+    {text: "today I need to take out the trash"},
+    {text: "today I need to  do HW"},
+    {text: "today I need to CODE"},
+    {text: "today I need to get a haircut"},
   ]
 
-  const [noteOne,noteTwo,noteThree] = await Promise.all(
-    txt.map(txt => Note.create(txt))
+  const [noteOne,noteTwo,noteThree,noteFour,noteFive,noteSix,noteSeven] = await Promise.all(
+    notes.map(note => Note.create(note))
   )
 
   noteOne.userId = moe.id;
   noteTwo.userId = lucy.id;
-  noteThree.userId = larry.id
+  noteThree.userId = larry.id;
+  noteFour.userId = moe.id;
+  noteFive.userId = lucy.id;
+  noteSix.userId = larry.id;
+  noteSeven.userId = lucy.id;
   await Promise.all([
     noteOne.save(),
     noteTwo.save(),
-    noteThree.save()
+    noteThree.save(),
+    noteFour.save(),
+    noteFive.save(),
+    noteSix.save(),
+    noteSeven.save()
   ])
   console.log(moe)
   return {
@@ -103,7 +117,11 @@ const syncAndSeed = async()=> {
     notes: {
       noteOne,
       noteTwo,
-      noteThree
+      noteThree,
+      noteFour,
+      noteFive,
+      noteSix,
+      noteSeven
     }
   };
 };
