@@ -16,6 +16,12 @@ const User = conn.define('user', {
   password: STRING
 });
 
+const Note = conn.define('note', {
+  txt: Sequelize.DataTypes.TEXT
+})
+
+Note.belongsTo(User)
+User.hasMany(Note)
 User.addHook('beforeSave', async(user)=> {
   if(user.changed('password')){
     const hashed = await bcrypt.hash(user.password, 3);
@@ -69,11 +75,35 @@ const syncAndSeed = async()=> {
   const [lucy, moe, larry] = await Promise.all(
     credentials.map( credential => User.create(credential))
   );
+  const txt = [
+    {txt: "today I need to do the laundry at 8 A.M."},
+    {txt: "today I need to get my neighbors mail because hes on vaca"},
+    {txt: "today I need to to make dinner reservations for my sisters birthday"},
+  ]
+
+  const [noteOne,noteTwo,noteThree] = await Promise.all(
+    txt.map(txt => Note.create(txt))
+  )
+
+  noteOne.userId = moe.id;
+  noteTwo.userId = lucy.id;
+  noteThree.userId = larry.id
+  await Promise.all([
+    noteOne.save(),
+    noteTwo.save(),
+    noteThree.save()
+  ])
+  console.log(moe)
   return {
     users: {
       lucy,
       moe,
       larry
+    },
+    notes: {
+      noteOne,
+      noteTwo,
+      noteThree
     }
   };
 };
@@ -81,6 +111,7 @@ const syncAndSeed = async()=> {
 module.exports = {
   syncAndSeed,
   models: {
-    User
+    User,
+    Note
   }
 };

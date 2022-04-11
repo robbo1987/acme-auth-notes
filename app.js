@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const { models: { User }} = require('./db');
+const { models: { User, Note }} = require('./db');
 const path = require('path');
 
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
@@ -19,6 +19,7 @@ app.post('/api/auth', async(req, res, next)=> {
 
 app.get('/api/auth', async(req, res, next)=> {
   try {
+    
     res.send(await User.byToken(req.headers.authorization));
   }
   catch(ex){
@@ -26,10 +27,10 @@ app.get('/api/auth', async(req, res, next)=> {
   }
 });
 
-app.get('/api/purchases', async(req, res, next)=> {
+app.get('/api/notes', async(req, res, next)=> {
   try {
-    const user = await User.byToken(req.headers.authorization);
-    res.send('TODO Send the purchases for this user');
+    const notes = await Note.findAll()
+    res.send(notes)
   }
   catch(ex){
     next(ex);

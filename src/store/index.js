@@ -2,8 +2,12 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import axios from 'axios';
+const LOAD_NOTES = "LOAD_NOTES"
 
 const notes = (state = [], action)=> {
+  if(action.type === LOAD_NOTES) {
+    return action.notes
+  }
   return state;
 };
 
@@ -26,6 +30,7 @@ const signIn = (credentials)=> {
   return async(dispatch)=> {
     let response = await axios.post('/api/auth', credentials);
     const { token } = response.data;
+    console.log(token)
     window.localStorage.setItem('token', token);
     return dispatch(attemptLogin());
   }
@@ -51,6 +56,13 @@ const store = createStore(
   }),
   applyMiddleware(thunk, logger)
 );
+
+export const fetchNotes = () => {
+  return async(dispatch) => {
+    const notes = (await axios.get('/api/notes')).data;
+    dispatch({type: LOAD_NOTES, notes})
+  }
+}
 
 export { attemptLogin, signIn, logout };
 
