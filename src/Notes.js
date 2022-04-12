@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {destroyNote} from './store';
+import AddNote from './AddNote.react'
 
 const Notes = ({ notes, auth, destroyNote }) => {
   console.log(auth);
@@ -9,6 +10,7 @@ const Notes = ({ notes, auth, destroyNote }) => {
     <div>
       <Link to="/home">Home</Link>
       <div>TODO - Ability of User to manage notes</div>
+      <AddNote />
       <div>
         Here is a list of all user specific notes for {auth.username}
         <ul>
