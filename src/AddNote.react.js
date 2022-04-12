@@ -12,7 +12,7 @@ class AddNote extends React.Component {
   }
 
   render() {
-    const { text } = this.state;
+    const { text} = this.state;
     return (
       <div>
         <h1>Add a New Note!</h1>
@@ -21,7 +21,8 @@ class AddNote extends React.Component {
           ev.preventDefault();
           this.props.add(
             this.state.text
-          );
+          ); this.setState({text:''})
+          
         }}
       >
         <input
