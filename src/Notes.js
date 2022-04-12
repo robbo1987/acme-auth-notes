@@ -1,8 +1,9 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import {destroyNote} from './store';
 
-const Notes = ({ notes, auth }) => {
+const Notes = ({ notes, auth, destroyNote }) => {
   console.log(auth);
   return (
     <div>
@@ -12,7 +13,11 @@ const Notes = ({ notes, auth }) => {
         Here is a list of all user specific notes for {auth.username}
         <ul>
           {notes.map((note) => {
-            return <li>note: {note.text}</li>;
+            return (
+              <li key={note.id}>
+                note: {note.text} <button onClick ={()=> destroyNote(note) }>Delete Note</button> 
+              </li>
+            );
           })}
         </ul>
       </div>
@@ -20,4 +25,10 @@ const Notes = ({ notes, auth }) => {
   );
 };
 
-export default connect((state) => state)(Notes);
+const mapDispatch = (dispatch) => {
+  return {
+    destroyNote: (note) => dispatch(destroyNote(note)),
+  };
+};
+
+export default connect((state) => state, mapDispatch)(Notes);

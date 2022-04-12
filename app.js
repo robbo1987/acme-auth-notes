@@ -41,6 +41,17 @@ app.get("/api/notes", async (req, res, next) => {
   
 });
 
+app.delete('/api/notes/:id', async(req,res,next) => {
+  try{
+    const note = await Note.findByPk(req.params.id);
+    await note.destroy()
+    res.sendStatus(204)
+  }
+  catch(ex){
+    next(ex)
+  }
+})
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.status || 500).send({ error: err.message });

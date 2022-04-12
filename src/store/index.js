@@ -3,10 +3,15 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 import axios from "axios";
 const LOAD_NOTES = "LOAD_NOTES";
+const DESTROY_NOTE = 'DESTROY_NOTE'
 
 const notes = (state = [], action) => {
   if (action.type === LOAD_NOTES) {
     return action.notes;
+  }
+  if(action.type === DESTROY_NOTE) {
+    const notes = state.filter(note => note.id !== action.note.id)
+    return notes
   }
   return state;
 };
@@ -71,6 +76,15 @@ export const fetchNotes = () => {
     }
   };
 };
+
+export const destroyNote = note => {
+  return async(dispatch) => {
+    await axios.delete(`/api/notes/${note.id}`)
+    dispatch({type:DESTROY_NOTE, note})
+  }
+}
+
+
 
 export { attemptLogin, signIn, logout };
 
