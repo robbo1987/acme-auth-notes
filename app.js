@@ -29,38 +29,37 @@ app.get("/api/auth", async (req, res, next) => {
 
 app.get("/api/notes", async (req, res, next) => {
   try {
-    const user= await User.byToken(req.headers.authorization)
-    res.send(await Note.findAll({
-      where: {
-        userId:user.id
-      }
-    }))
+    const user = await User.byToken(req.headers.authorization);
+    res.send(
+      await Note.findAll({
+        where: {
+          userId: user.id,
+        },
+      })
+    );
   } catch (ex) {
     next(ex);
   }
-  
 });
 
-app.delete('/api/notes/:id', async(req,res,next) => {
-  try{
+app.delete("/api/notes/:id", async (req, res, next) => {
+  try {
     const note = await Note.findByPk(req.params.id);
-    await note.destroy()
-    res.sendStatus(204)
+    await note.destroy();
+    res.sendStatus(204);
+  } catch (ex) {
+    next(ex);
   }
-  catch(ex){
-    next(ex)
-  }
-})
+});
 
-app.post('/api/notes', async(req,res,next) => {
-  try{
+app.post("/api/notes", async (req, res, next) => {
+  try {
     const note = await Note.create(req.body);
-    res.status(201).send(note)
+    res.status(201).send(note);
+  } catch (ex) {
+    next(ex);
   }
-  catch(ex) {
-    next(ex)
-  }
-})
+});
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.status || 500).send({ error: err.message });
