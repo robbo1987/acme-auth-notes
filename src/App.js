@@ -22,11 +22,10 @@ const App = connect(
   class App extends React.Component {
     componentDidMount() {
       this.props.attemptLogin();
-      this.props.bootstrap();
     }
     componentDidUpdate(prevProps) {
       if (!prevProps.auth.id && this.props.auth.id) {
-        console.log("you just loggerd in");
+        this.props.bootstrap();
       }
       return;
     }
