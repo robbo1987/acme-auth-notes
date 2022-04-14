@@ -5,7 +5,6 @@ import {destroyNote} from './store';
 import AddNote from './AddNote.react'
 
 const Notes = ({ notes, auth, destroyNote }) => {
-  console.log(auth);
   return (
     <div>
       <Link to="/home">Home</Link>
